@@ -1,0 +1,21 @@
+body{
+    width: 960px;
+    margin: auto;
+}
+
+main section {
+    display: grid;
+    grid-template-columns: 306px 306px 306px;
+    gap: 20px;
+    
+   
+}
+
+main section img {
+    width: 100%;
+    object-fit: cover;
+}
+
+button {
+    margin-top: 100px;
+}
