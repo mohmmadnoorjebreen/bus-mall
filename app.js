@@ -1,5 +1,6 @@
 'use strict';
 
+
 const sectionImg = document.getElementById( 'sectionImg' );
 
 const leftImg = document.getElementById( 'leftImage' );
@@ -8,7 +9,7 @@ const centerImg = document.getElementById( 'centerImage' );
 
 const rightImg = document.getElementById( 'rightImage' );
 
-leftImg.src = './img/bag.jpg';
+
 let imgArrayName = ['bag','banana','bathroom','boots'
   ,'breakfast','bubblegum','chair',
   'cthulhu','dog-duck','dragon',
@@ -40,7 +41,7 @@ function Img( name,path ) {
 for ( let i = 0; i < imgArrayPath.length; i++ ) {
   new Img( imgArrayName[i],imgArrayPath[i] );
 }
-console.log( Img.all );
+// console.log( Img.all );
 let count = 0;
 let NumberOfClicKAllowable = 25;
 
@@ -71,30 +72,44 @@ function eventClick( c ) {
       Img.all[rightImageIndex].clicks++;
     }
     renderImg();
-  } else {
+  } else {button.disabled = false;
+    button.addEventListener( 'click' , clickButton );
     document.getElementById( 'sectionImg' ).removeEventListener( 'click', eventClick );
   }
 
 }
 
-function renderImg() {
-  let leftIndex = randomNumber( 0, imgArrayPath.length - 1 );
-  let centerIndex ;randomNumber( 0, imgArrayPath.length - 1 );
-  let rightIndex;
+let leftIndex = 0;
+let centerIndex = 0;
+let rightIndex; 0;
 
-  do {
+
+function renderImg() {
+  leftImageIndex = leftIndex;
+  centerImageIndex = centerIndex ;
+  rightImageIndex = rightIndex;
+  leftIndex = randomNumber( 0, imgArrayPath.length - 1 );
+  centerIndex ;
+  rightIndex;
+
+
+  do {leftIndex = randomNumber( 0, imgArrayPath.length - 1 );
     centerIndex = randomNumber( 0, imgArrayPath.length - 1 );
-    rightIndex = randomNumber( 0, imgArrayPath.length - 1 );
-  } while ( leftIndex === rightIndex || leftIndex === centerIndex || centerIndex === rightIndex );
+    rightIndex = randomNumber( 0, imgArrayPath.length - 1 );}
+  while( leftIndex === rightIndex || leftIndex === centerIndex || centerIndex === rightIndex || leftIndex === leftImageIndex || leftIndex === centerImageIndex || leftIndex === rightImageIndex || centerIndex === leftImageIndex || centerIndex === centerImageIndex || centerIndex === rightImageIndex || rightIndex === leftImageIndex || rightIndex === centerImageIndex || rightIndex === rightImageIndex );
+
+
+
+
+
 
   leftImg.src = Img.all[leftIndex].img;
   centerImg.src = Img.all[centerIndex].img;
   rightImg.src = Img.all[rightIndex].img;
 
-  leftImageIndex = leftIndex;
-  centerImageIndex = centerIndex ;
-  rightImageIndex = rightIndex;
 
+  console.log( leftImageIndex );
+  console.log( leftIndex );
   Img.all[leftIndex].shown++;
   Img.all[centerIndex].shown++;
   Img.all[rightIndex].shown++;
@@ -116,11 +131,12 @@ function randomNumber( min, max ) {
 
 
 
+
 const button = document.getElementById( 'button' );
 
-button.addEventListener( 'click' , clickButton );
 
-function renderClick() {
+
+function clickButton() {
   const parentElement = document.getElementById( 'main' );
 
 
@@ -133,11 +149,57 @@ function renderClick() {
     ulElement.appendChild( liElementT );
     liElementT.textContent = `${Img.all[i].name}  had  ${Img.all[i].clicks} votes, and was seen ${Img.all[i].shown}`;
   }
-
+  renderChart();
+  button.removeEventListener( 'click', clickButton );
 
 }
 
-function clickButton() {
-  renderClick();
+
+
+function renderChart() {
+
+  let clicks = [];
+  let names = [];
+  let shown = [];
+  for( let i = 0; i < Img.all.length; i++ ) {
+    clicks.push( Img.all[i].clicks );
+    names.push( Img.all[i].name );
+    shown.push( Img.all[i].shown );
+
+  }
+
+  let ctx = document.getElementById( 'myChart' ).getContext( '2d' );
+  let myChart = new Chart( ctx, {
+    type: 'bar',
+    data: {
+      labels: names,
+      datasets: [{
+        label: '# of Votes',
+        data: clicks,
+        backgroundColor:
+        'rgba(255, 0, 0, 0.4)',
+        borderColor:
+          'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+      }, {
+        label: '# of shown',
+        data: shown,
+        backgroundColor:
+          'rgb(0, 0, 255)',
+        borderColor:
+          'rgba(144, 99, 100, 1)',
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  } );
+  
+
 }
 
