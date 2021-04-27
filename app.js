@@ -9,6 +9,9 @@ const centerImg = document.getElementById( 'centerImage' );
 
 const rightImg = document.getElementById( 'rightImage' );
 
+const savein = document.getElementById( 'savein' );
+
+
 
 let imgArrayName = ['bag','banana','bathroom','boots'
   ,'breakfast','bubblegum','chair',
@@ -50,15 +53,15 @@ sectionImg.addEventListener( 'click' , eventClick );
 
 let leftImageIndex = 0;
 let centerImageIndex = 0;
-let rightImageIndex = 0;
+let rightImageIndex = 12;
 
 
 
 function eventClick( c ) {
-
+  c.preventDefault();
   count ++;
 
-  if ( ( c.target.id === 'leftImage' || c.target.id === 'rightImage' || c.target.id === 'centerImage' )
+  if ( ( c.target.id === 'leftImage' || c.target.id === 'centerImage' || c.target.id === 'rightImage' )
    && count < NumberOfClicKAllowable ) {
 
     if( c.target.id === 'leftImage' ) {
@@ -73,22 +76,24 @@ function eventClick( c ) {
     }
     renderImg();
   } else {button.disabled = false;
-    button.addEventListener( 'click' , clickButton );
-    document.getElementById( 'sectionImg' ).removeEventListener( 'click', eventClick );
+
+
+
+    // document.getElementById( 'sectionImg' ).removeEventListener( 'click', eventClick );
   }
 
 }
 
 let leftIndex = 0;
 let centerIndex = 0;
-let rightIndex; 0;
+let rightIndex =  0;
 
 
 function renderImg() {
   leftImageIndex = leftIndex;
   centerImageIndex = centerIndex ;
   rightImageIndex = rightIndex;
-  leftIndex = randomNumber( 0, imgArrayPath.length - 1 );
+  leftIndex ;
   centerIndex ;
   rightIndex;
 
@@ -108,8 +113,7 @@ function renderImg() {
   rightImg.src = Img.all[rightIndex].img;
 
 
-  console.log( leftImageIndex );
-  console.log( leftIndex );
+
   Img.all[leftIndex].shown++;
   Img.all[centerIndex].shown++;
   Img.all[rightIndex].shown++;
@@ -134,24 +138,39 @@ function randomNumber( min, max ) {
 
 const button = document.getElementById( 'button' );
 
-
+button.addEventListener( 'click' , clickButton );
 
 function clickButton() {
-  const parentElement = document.getElementById( 'main' );
 
+  let data =  JSON.parse( localStorage.getItem( 'saveImg' ) );
+  if ( data ) {
+    for ( let i = 0 ; i < imgArrayPath.length; i++ ){
+      Img.all[i].clicks = Img.all[i].clicks + data[i].clicks ;
+      Img.all[i].shown = Img.all[i].shown + + data[i].shown;
+    }}
 
   const ulElement = document.createElement( 'ul' );
-  parentElement.appendChild( ulElement );
-
+  savein.appendChild( ulElement );
   for ( let i = 0 ; i < imgArrayPath.length; i++ ){
 
     let liElementT = document.createElement( 'li' );
     ulElement.appendChild( liElementT );
-    liElementT.textContent = `${Img.all[i].name}  had  ${Img.all[i].clicks} votes, and was seen ${Img.all[i].shown}`;
-  }
-  renderChart();
-  button.removeEventListener( 'click', clickButton );
 
+    liElementT.textContent = `${Img.all[i].name }  had  ${Img.all[i].clicks } votes, and was seen ${Img.all[i].shown }`;
+  }
+
+  renderChart();
+
+
+
+
+
+
+
+  localStorage.setItem( 'saveImg', JSON.stringify( Img.all ) );
+
+
+  button.removeEventListener( 'click', clickButton );
 }
 
 
@@ -199,7 +218,12 @@ function renderChart() {
       }
     }
   } );
-  
+
 
 }
+
+
+
+
+
 
